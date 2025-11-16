@@ -23,4 +23,11 @@
         </arguments>
     </type>
 
+    <!-- Plugin to allow span tag with specified attributes in WYSIWYG HTML content -->
+    <type name="Magento\Cms\Model\Wysiwyg\Config">
+        <plugin name="elielweb_product_configurator_html_validator"
+                type="ElielWeb\ProductConfigurator\Plugin\HtmlValidatorPlugin"
+                sortOrder="10" />
+    </type>
+
 </config>

@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * ElielWeb OptionsProduct Admin Dependency Injection Configuration
+ *
+ * @category  ElielWeb
+ * @package   ElielWeb_ProductConfigurator
+ * @author    Elie <elie@redline.paris>
+ * @copyright Copyright (c) 2025 RedLine
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <!-- Plugin to allow span tag with specified attributes in WYSIWYG HTML content -->
+    <type name="Magento\Cms\Model\Wysiwyg\Config">
+        <plugin name="elielweb_product_configurator_html_validator_admin"
+                type="ElielWeb\ProductConfigurator\Plugin\HtmlValidatorPlugin"
+                sortOrder="10" />
+    </type>
+
+    <!-- Configure HTML allowed tags -->
+    <type name="Magento\Catalog\Helper\Product\Edit\Action\Attribute">
+        <arguments>
+            <argument name="htmlAllowedTags" xsi:type="array">
+                <item name="span" xsi:type="array">
+                    <item name="class" xsi:type="string">class</item>
+                    <item name="width" xsi:type="string">width</item>
+                    <item name="height" xsi:type="string">height</item>
+                    <item name="style" xsi:type="string">style</item>
+                    <item name="alt" xsi:type="string">alt</item>
+                    <item name="title" xsi:type="string">title</item>
+                    <item name="border" xsi:type="string">border</item>
+                    <item name="id" xsi:type="string">id</item>
+                    <item name="data-active-tab" xsi:type="string">data-active-tab</item>
+                    <item name="data-appearance" xsi:type="string">data-appearance</item>
+                    <item name="data-autoplay" xsi:type="string">data-autoplay</item>
+                    <item name="data-autoplay-speed" xsi:type="string">data-autoplay-speed</item>
+                    <item name="data-background-images" xsi:type="string">data-background-images</item>
+                    <item name="data-background-type" xsi:type="string">data-background-type</item>
+                    <item name="data-carousel-mode" xsi:type="string">data-carousel-mode</item>
+                    <item name="data-center-padding" xsi:type="string">data-center-padding</item>
+                    <item name="data-content-type" xsi:type="string">data-content-type</item>
+                    <item name="data-element" xsi:type="string">data-element</item>
+                    <item name="data-enable-parallax" xsi:type="string">data-enable-parallax</item>
+                    <item name="data-fade" xsi:type="string">data-fade</item>
+                    <item name="data-grid-size" xsi:type="string">data-grid-size</item>
+                    <item name="data-infinite-loop" xsi:type="string">data-infinite-loop</item>
+                    <item name="data-link-type" xsi:type="string">data-link-type</item>
+                    <item name="data-locations" xsi:type="string">data-locations</item>
+                    <item name="data-overlay-color" xsi:type="string">data-overlay-color</item>
+                    <item name="data-parallax-speed" xsi:type="string">data-parallax-speed</item>
+                    <item name="data-pb-style" xsi:type="string">data-pb-style</item>
+                    <item name="data-same-width" xsi:type="string">data-same-width</item>
+                    <item name="data-show-arrows" xsi:type="string">data-show-arrows</item>
+                    <item name="data-show-button" xsi:type="string">data-show-button</item>
+                    <item name="data-show-controls" xsi:type="string">data-show-controls</item>
+                    <item name="data-show-dots" xsi:type="string">data-show-dots</item>
+                    <item name="data-show-overlay" xsi:type="string">data-show-overlay</item>
+                    <item name="data-slide-name" xsi:type="string">data-slide-name</item>
+                    <item name="data-slick-index" xsi:type="string">data-slick-index</item>
+                    <item name="data-role" xsi:type="string">data-role</item>
+                    <item name="data-product-id" xsi:type="string">data-product-id</item>
+                    <item name="data-price-box" xsi:type="string">data-price-box</item>
+                    <item name="aria-hidden" xsi:type="string">aria-hidden</item>
+                    <item name="aria-label" xsi:type="string">aria-label</item>
+                    <item name="data-tab-name" xsi:type="string">data-tab-name</item>
+                    <item name="data-video-fallback-src" xsi:type="string">data-video-fallback-src</item>
+                    <item name="data-video-lazy-load" xsi:type="string">data-video-lazy-load</item>
+                    <item name="data-video-loop" xsi:type="string">data-video-loop</item>
+                    <item name="data-video-overlay-color" xsi:type="string">data-video-overlay-color</item>
+                    <item name="data-video-play-only-visible" xsi:type="string">data-video-play-only-visible</item>
+                    <item name="data-video-src" xsi:type="string">data-video-src</item>
+                    <item name="data-placeholder" xsi:type="string">data-placeholder</item>
+                    <item name="href" xsi:type="string">href</item>
+                    <item name="role" xsi:type="string">role</item>
+                    <item name="target" xsi:type="string">target</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+</config>
