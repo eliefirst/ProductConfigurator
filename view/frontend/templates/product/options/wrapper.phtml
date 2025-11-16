@@ -35,6 +35,9 @@ $options = $product->getOptions() ?? [];
 
                 <div class="control">
                     <?php
+                    // Check if this is a wire color option that should use color swatches
+                    $isWireOption = $optionsViewModel->isWireOption($option);
+
                     switch ($option->getType()) {
                         case Option::OPTION_TYPE_RADIO:
                             echo $block->getLayout()
@@ -47,13 +50,24 @@ $options = $product->getOptions() ?? [];
                             break;
 
                         case Option::OPTION_TYPE_DROP_DOWN:
-                            echo $block->getLayout()
-                                ->createBlock(\Magento\Framework\View\Element\Template::class)
-                                ->setTemplate('ElielWeb_ProductConfigurator::product/options/type/select.phtml')
-                                ->setData('option', $option)
-                                ->setData('product', $product)
-                                ->setData('options_view_model', $optionsViewModel)
-                                ->toHtml();
+                            // Use color swatch template for wire options, regular select for others
+                            if ($isWireOption) {
+                                echo $block->getLayout()
+                                    ->createBlock(\Magento\Framework\View\Element\Template::class)
+                                    ->setTemplate('ElielWeb_ProductConfigurator::product/options/type/color-swatch.phtml')
+                                    ->setData('option', $option)
+                                    ->setData('product', $product)
+                                    ->setData('options_view_model', $optionsViewModel)
+                                    ->toHtml();
+                            } else {
+                                echo $block->getLayout()
+                                    ->createBlock(\Magento\Framework\View\Element\Template::class)
+                                    ->setTemplate('ElielWeb_ProductConfigurator::product/options/type/select.phtml')
+                                    ->setData('option', $option)
+                                    ->setData('product', $product)
+                                    ->setData('options_view_model', $optionsViewModel)
+                                    ->toHtml();
+                            }
                             break;
 
                         default:
