@@ -13,10 +13,13 @@
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
 
     <!-- Plugin to allow span tag with specified attributes in WYSIWYG HTML content (admin area only) -->
+    <!-- DISABLED FOR PERFORMANCE - TODO: Find alternative solution -->
+    <!--
     <type name="Magento\Cms\Model\Wysiwyg\Config">
         <plugin name="elielweb_product_configurator_html_validator_admin"
                 type="ElielWeb\ProductConfigurator\Plugin\HtmlValidatorPlugin"
                 sortOrder="10" />
     </type>
+    -->
 
 </config>
