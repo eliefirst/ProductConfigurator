@@ -21,5 +21,20 @@
                 </argument>
             </arguments>
         </referenceBlock>
+
+        <!-- Add Gold Color Selector before custom options -->
+        <referenceContainer name="product.info.main">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="product.gold.color.selector"
+                   template="ElielWeb_ProductConfigurator::product/gold-color-selector.phtml"
+                   before="product.info.options.wrapper">
+                <arguments>
+                    <argument name="gold_color_view_model" xsi:type="object">
+                        ElielWeb\ProductConfigurator\ViewModel\GoldColorSelector
+                    </argument>
+                    <argument name="product" xsi:type="object">Magento\Framework\Registry</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
     </body>
 </page>

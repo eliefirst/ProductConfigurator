@@ -1,0 +1,210 @@
+<?php
+/**
+ * ElielWeb ProductConfigurator - Gold Color Selector Template (Hyva)
+ *
+ * Displays gold color swatches for product variants
+ *
+ * @var $block \Magento\Framework\View\Element\Template
+ * @var \ElielWeb\ProductConfigurator\ViewModel\GoldColorSelector $goldColorViewModel
+ * @var \Magento\Catalog\Api\Data\ProductInterface $product
+ */
+
+// Get product from registry
+$registry = $block->getData('product');
+$product = $registry instanceof \Magento\Framework\Registry
+    ? $registry->registry('current_product')
+    : $block->getData('product');
+
+$goldColorViewModel = $block->getData('gold_color_view_model');
+
+if (!$product || !$goldColorViewModel || !$goldColorViewModel->hasGoldVariants($product)) {
+    return;
+}
+
+$variants = $goldColorViewModel->getGoldVariants($product);
+$currentGoldColor = $goldColorViewModel->getCurrentGoldColor($product);
+
+if (empty($variants) || count($variants) < 2) {
+    return; // Don't show selector if there's only one variant
+}
+?>
+
+<div class="gold-color-selector product-option-section" x-data="{ selectedColor: '<?= $escaper->escapeJs($currentGoldColor) ?>' }">
+    <div class="option-header">
+        <h3 class="option-title"><?= $escaper->escapeHtml(__('Couleur d\'Or')) ?></h3>
+        <span class="selected-color-label" x-text="selectedColor"></span>
+    </div>
+
+    <div class="gold-swatches">
+        <?php foreach ($variants as $variant): ?>
+            <?php
+            $isCurrent = $variant['is_current'];
+            $goldColor = $variant['gold_color'];
+            $hexCode = $variant['hex_code'];
+            $url = $variant['url'];
+            $label = $variant['label_fr']; // Use French label by default, can be made dynamic based on store
+            $isWhite = ($variant['gold_color_code'] === 'white');
+            ?>
+
+            <a href="<?= $escaper->escapeUrl($url) ?>"
+               class="gold-swatch-link <?= $isCurrent ? 'active' : '' ?>"
+               data-color="<?= $escaper->escapeHtmlAttr($goldColor) ?>"
+               data-sku="<?= $escaper->escapeHtmlAttr($variant['sku']) ?>"
+               title="<?= $escaper->escapeHtmlAttr($label) ?>"
+               @click="selectedColor = '<?= $escaper->escapeJs($goldColor) ?>'"
+               <?= $isCurrent ? 'aria-current="true"' : '' ?>>
+
+                <div class="gold-swatch <?= $isWhite ? 'light-swatch' : '' ?>"
+                     style="background-color: <?= $escaper->escapeHtmlAttr($hexCode) ?>;">
+
+                    <?php if ($isCurrent): ?>
+                        <!-- Checkmark for current selection -->
+                        <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    <?php endif; ?>
+                </div>
+
+                <span class="swatch-label"><?= $escaper->escapeHtml($label) ?></span>
+            </a>
+        <?php endforeach; ?>
+    </div>
+</div>
+
+<style>
+.gold-color-selector {
+    margin: 2rem 0;
+    padding: 1.5rem 0;
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.gold-color-selector .option-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.gold-color-selector .option-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #333;
+    margin: 0;
+}
+
+.gold-color-selector .selected-color-label {
+    font-size: 0.875rem;
+    color: #666;
+    font-weight: 500;
+}
+
+.gold-swatches {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.gold-swatch-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+    cursor: pointer;
+}
+
+.gold-swatch-link:hover {
+    transform: translateY(-2px);
+}
+
+.gold-swatch {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    position: relative;
+}
+
+.gold-swatch.light-swatch {
+    border: 2px solid #d0d0d0;
+}
+
+.gold-swatch-link:hover .gold-swatch {
+    border-color: #1a73e8;
+    box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
+}
+
+.gold-swatch-link.active .gold-swatch {
+    border: 3px solid #1a73e8;
+    box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
+    transform: scale(1.1);
+}
+
+.gold-swatch .check-icon {
+    width: 24px;
+    height: 24px;
+    color: #1a73e8;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+.gold-swatch.light-swatch .check-icon {
+    color: #1a73e8;
+}
+
+.swatch-label {
+    font-size: 0.75rem;
+    color: #333;
+    text-align: center;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.gold-swatch-link:hover .swatch-label,
+.gold-swatch-link.active .swatch-label {
+    color: #1a73e8;
+    font-weight: 600;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .gold-color-selector {
+        margin: 1.5rem 0;
+        padding: 1rem 0;
+    }
+
+    .gold-swatch {
+        width: 45px;
+        height: 45px;
+    }
+
+    .gold-swatches {
+        gap: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .gold-swatch {
+        width: 40px;
+        height: 40px;
+    }
+
+    .swatch-label {
+        font-size: 0.7rem;
+    }
+
+    .gold-color-selector .option-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+}
+</style>
