@@ -307,98 +307,243 @@ class ProductOptions implements ArgumentInterface
 
     /**
      * Get color hex code based on color name
-     * Maps common thread/wire color names to hex codes
+     * Maps thread/wire color names to hex codes (RedLine color palette)
      *
      * @param string $colorName
      * @return string|null
      */
     public function getColorHexCode(string $colorName): ?string
     {
+        // RedLine official color palette
         $colorMap = [
-            // Blacks & Grays
-            'black' => '#000000',
-            'licorice' => '#1B1212',
-            'anthracite' => '#293133',
-            'gray' => '#808080',
-            'grey' => '#808080',
-            'metal' => '#71797E',
+            // Basic Colors
+            'red' => '#cd3938',
+            'black' => '#1b1b1b',
+            'white' => '#dadada',
+            'blue' => '#2544b4',
+            'green' => '#3d6430',
+            'orange' => '#d16d2f',
+            'yellow' => '#e3d729',
+            'brown' => '#624540',
+            'pink' => '#e5349b',
+            'purple' => '#553f7b',
+            'gray' => '#868686',
+            'grey' => '#868686',
 
-            // Whites & Neutrals
-            'white' => '#FFFFFF',
-            'cream' => '#FFFDD0',
-            'pearl' => '#EAE0C8',
-            'champagne' => '#F7E7CE',
-            'biscuit' => '#FFE4C4',
-            'wheat' => '#F5DEB3',
+            // Fluorescent Colors
+            'fluorescent-rose' => '#e5349b',
+            'fluorescent-orange' => '#f97f4c',
+            'fluorescent-turquoise' => '#0cc7d8',
+            'fluorescent-green' => '#98e143',
+            'fluorescent-yellow' => '#e9ea08',
+            'fluorescent-red' => '#f12c4e',
 
-            // Beiges & Taupes
-            'beige' => '#F5F5DC',
-            'taupe' => '#B38B6D',
-            'greige' => '#C9C0BB',
+            // Blacks & Dark Colors
+            'black-chocolate' => '#3f2b29',
+            'licorice' => '#322d2e',
+            'anthracite' => '#3b3b3b',
 
-            // Browns
-            'brown' => '#964B00',
-            'chocolate' => '#7B3F00',
-            'cocoa' => '#875F42',
-            'loam' => '#6B4423',
-            'rust' => '#B7410E',
+            // Browns & Earth Tones
+            'loam' => '#45322d',
+            'coco' => '#4e3b32',
+            'cocoa' => '#4e3b32',
+            'chocolate' => '#644232',
+            'rust' => '#7d3928',
+            'mocha' => '#5e3832',
+            'chestnut' => '#926b4d',
+            'tan-mottled' => '#765d3d',
+
+            // Reds & Wines
+            'wine' => '#46081f',
+            'cassis' => '#580c2d',
+            'cherry' => '#e22425',
+            'poppy' => '#a3252a',
+            'carrot' => '#cc4a31',
+            'pomegranate' => '#d23171',
 
             // Pinks & Roses
-            'pink' => '#FFC0CB',
-            'rose' => '#FF007F',
-            'fushia' => '#FF00FF',
-            'orchid' => '#DA70D6',
-            'peony' => '#F4C2C2',
-            'raspberry' => '#E30B5C',
-            'candy' => '#FF69B4',
-            'salmon' => '#FA8072',
+            'fushia' => '#712a63',
+            'orchid' => '#98305e',
+            'peony' => '#985072',
+            'raspberry' => '#822247',
+            'candy' => '#d55780',
+            'rosewood' => '#cd94a0',
+            'salmon' => '#bf5a42',
 
             // Purples & Violets
-            'lilac' => '#C8A2C8',
-            'purple' => '#800080',
-            'violet' => '#8F00FF',
-            'lavender' => '#E6E6FA',
-            'mauve' => '#E0B0FF',
+            'lilac' => '#cf8ba1',
+            'light-purple' => '#9881a7',
+            'violet' => '#553f7b',
+            'electric-purple' => '#3b1664',
+            'lavender' => '#7455a4',
+            'mauve' => '#9e7acd',
+            'purple-eye' => '#653478',
+            'violette' => '#9974af',
 
             // Blues
-            'blue' => '#0000FF',
-            'ocean' => '#006994',
-            'caribbean' => '#00CED1',
-            'navy' => '#000080',
-            'baltic' => '#3F4F75',
-            'lagoon' => '#04536D',
+            'blue-night' => '#293669',
+            'ocean' => '#4961a7',
+            'caribbean' => '#4d8aa4',
+            'blue-jeans' => '#497aa8',
+            'navy' => '#1e2046',
+            'french-blue' => '#2544b4',
+            'blue-turtle' => '#3c629c',
 
             // Greens
-            'green' => '#008000',
-            'olive' => '#808000',
-            'jade' => '#00A86B',
-            'forest' => '#228B22',
-            'leaf' => '#50C878',
-            'emerald' => '#50C878',
-            'lime' => '#00FF00',
-            'khaki' => '#C3B091',
-            'duck' => '#C3B091',
+            'lagoon' => '#439988',
+            'duck' => '#235e58',
+            'khaki' => '#47441d',
+            'green-olive' => '#646326',
+            'jade' => '#8b9a67',
+            'forest' => '#445d2f',
+            'leaf' => '#3d6430',
+            'emerald' => '#1f9053',
+            'green-apple' => '#6b9b26',
+            'lime' => '#a8b02d',
+            'nature' => '#56973b',
+            'shaker' => '#b4cda3',
 
-            // Oranges & Reds
-            'orange' => '#FFA500',
-            'red' => '#FF0000',
-            'pumpkin' => '#FF7518',
-            'carrot' => '#ED9121',
-            'poppy' => '#E35335',
-            'cherry' => '#DE3163',
-            'pomegranate' => '#C34A36',
+            // Yellows & Golds
+            'yellow' => '#e3d729',
+            'ocher' => '#d9b544',
+            'dune' => '#d0a13c',
+            'sun' => '#eec330',
+            'lemon' => '#c7d425',
+            'goldenrod' => '#575751',
 
-            // Fluorescent
-            'fluo' => '#CCFF00',
-            'fluorescent' => '#CCFF00',
-            'flashy' => '#FF10F0',
+            // Grays
+            'gray-paris' => '#686869',
+            'greystone' => '#888982',
+            'simple-gray' => '#868686',
+            'gray-melange' => '#b0b1aa',
+            'rain' => '#a1a6ab',
+            'metal' => '#bcb7a0',
+
+            // Beiges & Neutrals
+            'turtledove' => '#c7c4ba',
+            'sky' => '#b3c1c8',
+            'baltic' => '#96cfd5',
+            'taupe' => '#7e6d55',
+            'greige' => '#95856f',
+            'pearl' => '#bcb8ab',
+            'amber' => '#af9864',
+            'camel' => '#bea466',
+            'flesh' => '#dfca9b',
+            'cream' => '#e7e3c7',
+            'off-white' => '#eae5c6',
+            'peach' => '#ecdccb',
+            'champagne' => '#d7b288',
+            'biscuit' => '#ce9f5e',
+            'wheat' => '#b18e5c',
+            'jasmin' => '#e9d6b1',
+
+            // Oranges
+            'orange' => '#d16d2f',
+            'pumpkin' => '#c6633f',
+            'autumn' => '#964330',
+
+            // Hot Colors
+            'hot-khaki' => '#50411f',
+
+            // Special Colors
+            'wire' => '#ca3e3f',
+            'phoenix' => '#eb519f',
+            'sweet' => '#ce7691',
+            'adorable' => '#869ea6',
+            'multi-sky' => '#afb8be',
+            'sea' => '#368dbc',
+            'multi-mocha' => '#6f5341',
+            'princess' => '#b64c75',
+            'boulevard' => '#6a6a69',
+            'multi-pearl' => '#dbd0ba',
+            'helen' => '#b1458b',
+            'martine' => '#635b3d',
+            'berries' => '#e74755',
+            'pop' => '#a18f6f',
+            'pretty' => '#23357e',
+            'jamaica' => '#d8c965',
+            'glittering' => '#bf6194',
+            'fireworks' => '#ddafb3',
+            'dream' => '#ceb8b2',
+
+            // Highlighters & Electric
+            'the-highlighters' => '#d3e376',
+            'electric' => '#2f3599',
+            'punk' => '#e445a4',
+
+            // Multi Colors (tahiti, maya, polar)
+            'tahiti' => '#0cd9c7',
+            'maya' => '#5bb0dd',
+            'polar' => '#beeadb',
+
+            // Multiuni Colors
+            'multiuni-red' => '#cf3838',
+            'multiuni-fluorescent-rose' => '#e6319e',
+            'multiuni-lagoon' => '#449b8a',
+            'multiuni-fluorescent-green' => '#9ee54e',
+            'multiuni-blue-jean' => '#6c8aab',
+            'multiuni-ocean' => '#4a61a9',
+            'multiuni-champagne' => '#dbb790',
+            'multiuni-salmon' => '#c05a40',
+            'multiuni-poppy' => '#a4242a',
+            'multiuni-peony' => '#985073',
+            'multiuni-violet' => '#553f7c',
+            'multiuni-leaf' => '#3c642f',
+            'multiuni-duck' => '#225e59',
+            'multiuni-gray-melange' => '#b1b1a8',
+            'multiuni-metal' => '#beb9a1',
+            'multiuni-simple-gray' => '#888888',
+            'multiuni-graystone' => '#888b81',
+            'multiuni-anthracite' => '#3b3b3c',
+            'multiuni-black' => '#1b1b1b',
+            'multiuni-wheat' => '#b28f5a',
+            'multiuni-biscuit' => '#ce9f5c',
+            'multiuni-lime' => '#a9b12d',
+            'multiuni-khaki' => '#48451d',
+            'multiuni-mocha' => '#5f3731',
+            'multiuni-choco' => '#644131',
+            'multiuni-rust' => '#46312d',
+
+            // Country Flags
+            'france' => '#ec2636',
+            'england' => '#fb0404',
+            'germany' => '#050404',
+            'italy' => '#079d30',
+            'spain' => '#e85d09',
+            'turkey' => '#fb0404',
+            'sweden' => '#044296',
+            'slovakia' => '#044296',
+            'russia' => '#fb0c0c',
+            'albania' => '#fb0404',
+            'czech-republic' => '#fb0c0c',
+            'portugal' => '#056e2f',
+            'poland' => '#fb042c',
+            'wales' => '#dd0620',
+            'ireland' => '#fb8708',
+            'northern-irland' => '#ea0808',
+            'romania' => '#04217c',
+            'switzerland' => '#fb0423',
+            'ukraine' => '#fbd305',
+            'austria' => '#fb0423',
         ];
 
-        // Search for color in the name (case insensitive)
-        $colorNameLower = strtolower($colorName);
+        // Normalize color name (convert to lowercase and replace spaces with dashes)
+        $colorNameNormalized = strtolower(trim($colorName));
+        $colorNameNormalized = str_replace([' ', '_'], '-', $colorNameNormalized);
 
-        foreach ($colorMap as $color => $hex) {
-            if (stripos($colorNameLower, $color) !== false) {
+        // Direct match first
+        if (isset($colorMap[$colorNameNormalized])) {
+            return $colorMap[$colorNameNormalized];
+        }
+
+        // Try to find partial match
+        foreach ($colorMap as $colorKey => $hex) {
+            // Check if the color key is in the name
+            if (stripos($colorNameNormalized, $colorKey) !== false) {
+                return $hex;
+            }
+            // Check if the name is in the color key
+            if (stripos($colorKey, $colorNameNormalized) !== false) {
                 return $hex;
             }
         }
