@@ -15,6 +15,7 @@
         <sequence>
             <module name="Magento_Catalog"/>
             <module name="Magento_Store"/>
+            <module name="Aitoc_OptionsManagement"/>
         </sequence>
     </module>
 </config>
