@@ -20,6 +20,10 @@
                     ElielWeb\ProductConfigurator\ViewModel\ProductOptions
                 </argument>
             </arguments>
+            <!-- Force use of our custom wrapper template -->
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">ElielWeb_ProductConfigurator::product/options/wrapper.phtml</argument>
+            </action>
         </referenceBlock>
 
         <!-- Add Gold Color Selector before custom options -->
