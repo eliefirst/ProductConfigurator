@@ -12,11 +12,11 @@ use Magento\Catalog\Model\Product\Option;
 $product = $block->getProduct();
 $optionsViewModel = $block->getData('product_options_view_model');
 
-if (!$product->getHasOptions()) {
+// Check options directly instead of has_options flag
+$options = $product->getOptions() ?? [];
+if (empty($options)) {
     return;
 }
-
-$options = $product->getOptions() ?? [];
 ?>
 
 <div class="product-options-wrapper"

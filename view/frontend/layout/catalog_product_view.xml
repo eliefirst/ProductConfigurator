@@ -13,14 +13,13 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
-        <!-- Inject ViewModel into product options block (works with both Luma and Hyva) -->
-        <referenceBlock name="product.info.options.wrapper">
+        <!-- Override product options block template -->
+        <referenceBlock name="product.info.options">
             <arguments>
                 <argument name="product_options_view_model" xsi:type="object">
                     ElielWeb\ProductConfigurator\ViewModel\ProductOptions
                 </argument>
             </arguments>
-            <!-- Force use of our custom wrapper template -->
             <action method="setTemplate">
                 <argument name="template" xsi:type="string">ElielWeb_ProductConfigurator::product/options/wrapper.phtml</argument>
             </action>
@@ -31,7 +30,7 @@
             <block class="Magento\Catalog\Block\Product\View"
                    name="product.gold.color.selector"
                    template="ElielWeb_ProductConfigurator::product/gold-color-selector.phtml"
-                   before="product.info.options.wrapper">
+                   before="product.info.options">
                 <arguments>
                     <argument name="gold_color_view_model" xsi:type="object">
                         ElielWeb\ProductConfigurator\ViewModel\GoldColorSelector

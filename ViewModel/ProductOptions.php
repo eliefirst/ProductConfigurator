@@ -40,11 +40,12 @@ class ProductOptions implements ArgumentInterface
      */
     public function getOptionsData(ProductInterface $product): array
     {
-        if (!$product->getHasOptions()) {
+        // Check options directly instead of has_options flag
+        $options = $product->getOptions() ?? [];
+
+        if (empty($options)) {
             return [];
         }
-
-        $options = $product->getOptions() ?? [];
         $formattedOptions = [];
 
         foreach ($options as $option) {
