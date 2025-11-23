@@ -19,6 +19,9 @@
                 <item name="elielweb_migrate_aitoc_template" xsi:type="object">
                     ElielWeb\ProductConfigurator\Console\Command\MigrateAitocTemplate
                 </item>
+                <item name="elielweb_sync_options" xsi:type="object">
+                    ElielWeb\ProductConfigurator\Console\Command\SyncOptionsCommand
+                </item>
             </argument>
         </arguments>
     </type>
