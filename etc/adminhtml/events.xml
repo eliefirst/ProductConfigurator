@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * ElielWeb ProductConfigurator Events Configuration (Admin)
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+
+    <!-- Sync custom options when product is saved -->
+    <event name="catalog_product_save_after">
+        <observer name="elielweb_sync_product_options"
+                  instance="ElielWeb\ProductConfigurator\Observer\SyncProductOptionsObserver"/>
+    </event>
+
+</config>
