@@ -255,14 +255,51 @@ class ProductOptions implements ArgumentInterface
 
     /**
      * Check if option has Aitoc wire flag (for special rendering)
+     * Also detects wire/color options by title or value names when flag is not set
      *
      * @param Option $option
      * @return bool
      */
     public function isWireOption(Option $option): bool
     {
+        // First check Aitoc flag
         $flags = $this->optionMapper->extractAitocFlags($option->getAdditionalData());
-        return !empty($flags['is_wire']);
+        if (!empty($flags['is_wire'])) {
+            return true;
+        }
+
+        // Check if option title contains color-related keywords
+        $title = strtolower($option->getTitle() ?? '');
+        $colorKeywords = ['couleur', 'color', 'fil', 'wire', 'thread', 'cordon', 'cord'];
+        foreach ($colorKeywords as $keyword) {
+            if (strpos($title, $keyword) !== false) {
+                return true;
+            }
+        }
+
+        // Check if option values look like color names
+        $values = $option->getValues() ?? [];
+        if (count($values) >= 2) {
+            $colorNames = ['red', 'blue', 'green', 'black', 'white', 'pink', 'yellow', 'orange',
+                          'purple', 'violet', 'rose', 'noir', 'blanc', 'rouge', 'bleu', 'vert',
+                          'jaune', 'gris', 'gray', 'brown', 'marron'];
+            $colorMatches = 0;
+            foreach ($values as $value) {
+                $valueName = strtolower($value->getTitle() ?? '');
+                foreach ($colorNames as $colorName) {
+                    if (strpos($valueName, $colorName) !== false) {
+                        $colorMatches++;
+                        break;
+                    }
+                }
+            }
+            // If at least half of the values look like colors, treat as wire option
+            if ($colorMatches >= count($values) / 2) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

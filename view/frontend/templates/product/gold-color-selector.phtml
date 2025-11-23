@@ -13,19 +13,51 @@
 $product = $block->getProduct();
 $goldColorViewModel = $block->getData('gold_color_view_model');
 
-if (!$product || !$goldColorViewModel || !$goldColorViewModel->hasGoldVariants($product)) {
+if (!$product || !$goldColorViewModel) {
+    return;
+}
+
+$currentGoldColor = $goldColorViewModel->getCurrentGoldColor($product);
+
+// If product has no gold color attribute set, don't show
+if (empty($currentGoldColor)) {
     return;
 }
 
 $variants = $goldColorViewModel->getGoldVariants($product);
-$currentGoldColor = $goldColorViewModel->getCurrentGoldColor($product);
 
-if (empty($variants) || count($variants) < 2) {
-    return; // Don't show selector if there's only one variant
+// If no variants found (no gold_variant_group), create a single-item display for current product
+if (empty($variants)) {
+    $colorData = $goldColorViewModel->getGoldColorData($currentGoldColor);
+    if ($colorData) {
+        $variants = [[
+            'product_id' => $product->getId(),
+            'sku' => $product->getSku(),
+            'name' => $product->getName(),
+            'gold_color' => $currentGoldColor,
+            'gold_color_code' => $colorData['code'],
+            'hex_code' => $colorData['hex'],
+            'label_fr' => $colorData['label_fr'],
+            'label_en' => $colorData['label_en'],
+            'url' => $product->getProductUrl(),
+            'is_current' => true
+        ]];
+    }
 }
+
+// Get stock status
+$stockStatus = $goldColorViewModel->getStockStatus($product);
 ?>
 
 <div class="gold-color-selector product-option-section" x-data="{ selectedColor: '<?= $escaper->escapeJs($currentGoldColor) ?>' }">
+    <!-- Stock Status Display -->
+    <div class="stock-status <?= $stockStatus['is_in_stock'] ? 'in-stock' : 'out-of-stock' ?>">
+        <span class="stock-label"><?= $escaper->escapeHtml($stockStatus['label']) ?></span>
+        <?php if ($stockStatus['is_in_stock'] && $stockStatus['qty'] > 0): ?>
+            <span class="stock-qty">(<?= (int)$stockStatus['qty'] ?> <?= $escaper->escapeHtml(__('available')) ?>)</span>
+        <?php endif; ?>
+    </div>
+
     <div class="option-header">
         <h3 class="option-title"><?= $escaper->escapeHtml(__('Couleur d\'Or')) ?></h3>
         <span class="selected-color-label" x-text="selectedColor"></span>
@@ -73,6 +105,35 @@ if (empty($variants) || count($variants) < 2) {
     padding: 1.5rem 0;
     border-top: 1px solid #e0e0e0;
     border-bottom: 1px solid #e0e0e0;
+}
+
+/* Stock Status Styling */
+.gold-color-selector .stock-status {
+    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.gold-color-selector .stock-status.in-stock {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #a5d6a7;
+}
+
+.gold-color-selector .stock-status.out-of-stock {
+    background-color: #ffebee;
+    color: #c62828;
+    border: 1px solid #ef9a9a;
+}
+
+.gold-color-selector .stock-qty {
+    font-weight: 400;
+    font-size: 0.8rem;
 }
 
 .gold-color-selector .option-header {

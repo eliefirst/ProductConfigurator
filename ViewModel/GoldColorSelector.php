@@ -20,6 +20,8 @@ use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\InventorySalesAdminUi\Model\GetSalableQuantityDataBySku;
+use Magento\CatalogInventory\Api\StockRegistryInterface;
 
 class GoldColorSelector implements ArgumentInterface
 {
@@ -56,8 +58,72 @@ class GoldColorSelector implements ArgumentInterface
     public function __construct(
         private readonly CollectionFactory $productCollectionFactory,
         private readonly ProductRepositoryInterface $productRepository,
-        private readonly StoreManagerInterface $storeManager
+        private readonly StoreManagerInterface $storeManager,
+        private readonly StockRegistryInterface $stockRegistry,
+        private readonly ?GetSalableQuantityDataBySku $getSalableQuantityDataBySku = null
     ) {
+    }
+
+    /**
+     * Get stock status for a product
+     *
+     * @param ProductInterface $product
+     * @return array
+     */
+    public function getStockStatus(ProductInterface $product): array
+    {
+        $sku = $product->getSku();
+
+        try {
+            // Try MSI first (Magento 2.3+)
+            if ($this->getSalableQuantityDataBySku !== null) {
+                $salableData = $this->getSalableQuantityDataBySku->execute($sku);
+                if (!empty($salableData)) {
+                    $totalQty = 0;
+                    foreach ($salableData as $stockData) {
+                        $totalQty += (float)($stockData['qty'] ?? 0);
+                    }
+                    return [
+                        'is_in_stock' => $totalQty > 0,
+                        'qty' => $totalQty,
+                        'label' => $totalQty > 0 ? __('In Stock') : __('Out of Stock')
+                    ];
+                }
+            }
+        } catch (\Exception $e) {
+            // MSI not available, fall back to legacy
+        }
+
+        // Fallback to legacy stock
+        try {
+            $stockItem = $this->stockRegistry->getStockItemBySku($sku);
+            $qty = (float)$stockItem->getQty();
+            $isInStock = $stockItem->getIsInStock() && $qty > 0;
+
+            return [
+                'is_in_stock' => $isInStock,
+                'qty' => $qty,
+                'label' => $isInStock ? __('In Stock') : __('Out of Stock')
+            ];
+        } catch (\Exception $e) {
+            return [
+                'is_in_stock' => false,
+                'qty' => 0,
+                'label' => __('Out of Stock')
+            ];
+        }
+    }
+
+    /**
+     * Check if product is in stock
+     *
+     * @param ProductInterface $product
+     * @return bool
+     */
+    public function isInStock(ProductInterface $product): bool
+    {
+        $status = $this->getStockStatus($product);
+        return $status['is_in_stock'];
     }
 
     /**
