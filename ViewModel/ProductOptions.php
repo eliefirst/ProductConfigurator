@@ -119,7 +119,7 @@ class ProductOptions implements ArgumentInterface
                 'price_type' => $value->getPriceType(),
                 'sku' => $value->getSku(),
                 'sort_order' => $value->getSortOrder(),
-                'formatted_price' => $this->formatPrice($value->getPrice(), $value->getPriceType()),
+                'formatted_price' => $this->formatPrice((float)$value->getPrice(), $value->getPriceType() ?? 'fixed'),
             ];
         }
 
