@@ -27,7 +27,14 @@ $colorsData = $optionsViewModel->getWireColorsWithHex($option);
              this.selectedColorName = name;
              this.selectedColorHex = hex;
              this.isModalOpen = false;
-             selectOption(<?= (int)$optionId ?>, id, price);
+             // Update hidden input
+             document.querySelector('input[name=\'options[<?= (int)$optionId ?>]\']').value = id;
+             // Dispatch event for parent component
+             this.$dispatch('option-selected', {
+                 optionId: <?= (int)$optionId ?>,
+                 valueId: id,
+                 price: price
+             });
          }
      }">
 
@@ -44,7 +51,7 @@ $colorsData = $optionsViewModel->getWireColorsWithHex($option);
         <span x-show="!selectedColor"><?= $escaper->escapeHtml(__('SELECT')) ?></span>
         <span x-show="selectedColor" class="selected-preview">
             <span class="color-dash" :style="'background-color: ' + selectedColorHex"></span>
-            <span x-text="selectedColorName"></span>
+            <span class="color-name-text" x-text="selectedColorName"></span>
         </span>
     </button>
 
@@ -138,6 +145,16 @@ $colorsData = $optionsViewModel->getWireColorsWithHex($option);
     width: 30px;
     height: 4px;
     border-radius: 2px;
+    flex-shrink: 0;
+}
+
+.thread-select-btn .color-name-text {
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.thread-select-btn .color-name-text:empty {
+    display: none;
 }
 
 /* Modal Overlay */
