@@ -40,13 +40,24 @@ $options = $product->getOptions() ?? [];
 
                     switch ($option->getType()) {
                         case Option::OPTION_TYPE_RADIO:
-                            echo $block->getLayout()
-                                ->createBlock(\Magento\Framework\View\Element\Template::class)
-                                ->setTemplate('ElielWeb_ProductConfigurator::product/options/type/radio.phtml')
-                                ->setData('option', $option)
-                                ->setData('product', $product)
-                                ->setData('options_view_model', $optionsViewModel)
-                                ->toHtml();
+                            // Use color swatch template for wire options, regular radio for others
+                            if ($isWireOption) {
+                                echo $block->getLayout()
+                                    ->createBlock(\Magento\Framework\View\Element\Template::class)
+                                    ->setTemplate('ElielWeb_ProductConfigurator::product/options/type/color-swatch.phtml')
+                                    ->setData('option', $option)
+                                    ->setData('product', $product)
+                                    ->setData('options_view_model', $optionsViewModel)
+                                    ->toHtml();
+                            } else {
+                                echo $block->getLayout()
+                                    ->createBlock(\Magento\Framework\View\Element\Template::class)
+                                    ->setTemplate('ElielWeb_ProductConfigurator::product/options/type/radio.phtml')
+                                    ->setData('option', $option)
+                                    ->setData('product', $product)
+                                    ->setData('options_view_model', $optionsViewModel)
+                                    ->toHtml();
+                            }
                             break;
 
                         case Option::OPTION_TYPE_DROP_DOWN:
